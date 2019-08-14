@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Google Sign-In Demo</title>
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="219758474264-vh1bibcphgvbc32km508lubtqkanikf1.apps.googleusercontent.com">
+
+</head>
+
+<body>
+
+    <!-- <img src="http://localhost:3000/imagen/usuarios/5cd62ee73d22b71080bb0363-128.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7InJvbGUiOiJNQVNURVJfUk9MRSIsImVzdGFkbyI6dHJ1ZSwiZ29vZ2xlIjpmYWxzZSwiX2lkIjoiNWNkNjJlZTczZDIyYjcxMDgwYmIwMzYzIiwibm9tYnJlIjoiYm90ZWJyb3MyIiwiZW1haWwiOiJib3RlYnJvczJAZ21haWwuY29tIiwiX192IjowfSwiaWF0IjoxNTY1NzIyMTI4LCJleHAiOjE1NjU4OTQ5Mjh9.MVUDpZ1AStWKOzECtfPD4D0ve6kChJLT7aBC9r8fiBI" -->
+    <!-- alt=""> -->
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+
+    <a href="#" onclick="signOut();">Sign out</a>
+    <script>
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function() {
+                console.log('User signed out.');
+            });
+        }
+    </script>
+
+
+    <script>
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+
+            var id_token = googleUser.getAuthResponse().id_token;
+
+            console.log(id_token);
+
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/google');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                console.log('Signed in as: ' + xhr.responseText);
+            };
+            xhr.send('idtoken=' + id_token);
+
+        }
+    </script>
+
+</body>
+
+</html>
